@@ -1,62 +1,76 @@
-// Variables
-let userName = '';
-let userHealth = 40;
-let friezaHealth = 10;
-let friezaLives = 3;
-let userQuit = false;
+const productArray = [
+    {
+        brand: 'Superior',
+        item: 'DRT-3500',
+        quantity: 11
+    },
+    {
+        brand: 'Empire',
+        item: 'Boulevard',
+        quantity: 7
+    },
+    {
+        brand: 'Montigo',
+        item: 'Delray',
+        quantity: 5
+    },
+    {
+        brand: 'Napoleon',
+        item: 'Vector',
+        quantity: 3
+    },
+  ];
 
-// Attack Damage Function
-const getDamage = () => Math.floor(Math.random() * 5) + 1;
+class WoodlandDirect {
+    constructor(warehouse) {
+        this.inventory = warehouse;
+    }
 
-// Battle Function
-const startCombat = () => {
-    while (friezaHealth > 0) {
-        let attackQuit = prompt('Attack or Quit?');
-        if (attackQuit.toLowerCase() === 'attack'){
-            friezaHealth = friezaHealth - getDamage();
-            if (friezaHealth > 0){
-                userHealth = userHealth - getDamage();
-            }
-            // Don't want negative health, so setting to 0
-            if (friezaHealth < 0){friezaHealth = 0;}
-            if (userHealth < 0){userHealth = 0;}
+    // Get List of Hearths in Inventory
+    getInventory() {
+        console.log('Fireplace inventory:', this.inventory);
+    }
 
-            console.log(`Frieza has ${friezaHealth} health left.`);
-            console.log(`${userName} has ${userHealth} health left.`);
-            
-            if (friezaHealth <= 0){
-                friezaLives--;
-                console.log('Frieza has been defeated!')
-                console.log(`Frieza has ${friezaLives} forms left.`);
+    // Find item
+    getItem(item){
+        let hasItem = false;
+        for (let i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].item === item && this.inventory[i].quantity > 0){
+                hasItem = true;
             }
-            if (userHealth <= 0){
-                console.log(`${userName} has lost. Better luck next time!`)
-                break;
+        }
+        if (hasItem){
+            console.log('We have it in stock');
+        } else {
+            console.log(`We're out of that item`);
+        }
+    }
+
+    // Add Hearth to Inventory
+    addHearthToInventory(brand, item) {
+        this.inventory.push({ brand, item });
+    }
+
+    // Remove Hearth from Inventory
+    removeHearthFromInventory(item) {
+        for (let i = 0; i < this.inventory.length; i++) {
+        if (this.inventory[i].item === item) {
+            this.inventory.splice(i, 1);
             }
-        } else if (attackQuit.toLowerCase() === 'quit'){
-            console.log(`${userName} has quit. Later.`);
-            userQuit = true;
-            break;
+        }
+        console.log("This is the new hearth list", this.inventory);
+    }
+
+    // Edit Hearth in Inventory
+    editHearth(item, newQuantity) {
+        for (let i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].item === item) {
+                this.inventory[i].quantity =  newQuantity;
+            }
+            console.log("This is the new quantity", this.inventory[i].quantity);
         }
     }
 }
 
-
-// Start Game Function
-const startGame = () => {
-    let start = prompt('Would you like to play a game? Yes or No?');
-    if (start.toLowerCase() === 'yes') {
-        userName = prompt(`What is your character's name?`);
-        console.log(`${userName} has challenged Frieza. Begin!`);
-        while (friezaLives > 0 && userHealth > 0 && !userQuit){
-            startCombat();
-            friezaHealth = 10;
-        }
-        console.log('Game over!');
-    } else {
-        console.log('Maybe next time.');
-    }
-}
-
-
-startGame();
+const cuiStore = new WoodlandDirect(productArray);
+cuiStore.editHearth('Delray', 30);
